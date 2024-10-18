@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <map>
 // @author : Chessy
-// @date : 17/10/2024
+// @date : 18/10/2024
 // @def  filesystem
 namespace fs = std::filesystem;
 static std::filesystem::perms read_perm = std::filesystem::perms::owner_read;
@@ -21,9 +21,14 @@ public:
     {
         return !fs::exists(dirpath) && fs::is_directory(dirpath) && !fs::is_empty(dirpath);
     }
+
 public:
-    std::string pathToCreate(const fs::path& file)
+    std::string pathToCreate(const fs::path &file)
     {
+        std::cout << "Processing file: " << file.string() << "\n";
+        std::cout << "File extension: " << file.extension().string() << "\n";
+        if (!file.has_extension())
+            return "Undefine";
         std::map<std::string, std::string> fileTypeToDirectory = {
             // Documents
             {".doc", "Documents"},
@@ -119,8 +124,10 @@ public:
         for (const auto &[extension, directory] : fileTypeToDirectory)
         {
             if (file.extension().string() == extension)
-                std::cout<<"File types"<<file.extension().string();
+            {
+                std::cout << "Matched file type: " << file.extension().string() << " -> Directory: " << directory << "\n";
                 return directory;
+            }
         }
         return "Undefine";
     }
@@ -129,18 +136,20 @@ public:
     void createSubdir(const fs::path &file)
     {
         std::string file_type = file.extension().string();
-        std::string file_path = file;
+        std::string directory = pathToCreate(file);    // Get the directory based on file extension
+        // fs::path file_path = file.parent_path();       // Get the directory part of the file
+        fs::path pathCreation = file / directory; // Properly append the new subdirectory
         try
         {
-            std::string pathCreation = file_path.append("/").append(pathToCreate(file_type));
+            // std::string pathCreation = file_path.append("/").append(pathToCreate(file_type));
             if (!fs::exists(pathToCreate(pathCreation)))
 
                 if (fs::create_directories(pathCreation))
-                    std::cout << "Create subdir success :"<<pathCreation<<"\n";
+                    std::cout << "Create subdir success :" << pathCreation << "\n";
                 else
-                    std::cout << "Fail to create :"<<pathCreation<<"\n";
+                    std::cout << "Fail to create :" << pathCreation << "\n";
             else
-                std::cout << "Subdirectory already exists :"<<pathCreation<<"\n";
+                std::cout << "Subdirectory already exists :" << pathCreation << "\n";
         }
         catch (const fs::filesystem_error err)
         {
@@ -188,21 +197,32 @@ public:
 };
 int main()
 {
+    // Declare
     Structura p;
-    // Input path
     std::string orpath = "/";
-    std::cout << "Path: ";
-    std::cin >> orpath;
-    fs::path dirpath = orpath;
-    // Executed
-    if (p.isValidPath(dirpath))
+    // Input path
+    do
     {
-        std::cout << "Path not found ";
-    }
-    else
-    {
-        std::cout << "Path found." << std::endl;
-        p.listPath(dirpath);
-    }
+        std::cout << "Path: ";
+        std::cin >> orpath;
+        fs::path dirpath = orpath;
+        char cf;
+        std::cout << "Are you sure to restruct" << orpath << " ? " << "(Y or N)";
+        std::cin >> cf;
+        if (cf == 'Y')
+            if (p.isValidPath(dirpath))
+                std::cout << "Path not found ";
+            else
+            {
+                std::cout << "Path found." << std::endl;
+                p.listPath(dirpath);
+                return 0;
+            }
+        else
+        {
+            continue;
+        }
+    } while (true);
+
     return 0;
 }
