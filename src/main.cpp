@@ -22,7 +22,7 @@ public:
         return !fs::exists(dirpath) && fs::is_directory(dirpath) && !fs::is_empty(dirpath);
     }
 public:
-    fs::path pathToCreate(const std::string file_type)
+    std::string pathToCreate(const fs::path& file)
     {
         std::map<std::string, std::string> fileTypeToDirectory = {
             // Documents
@@ -91,7 +91,7 @@ public:
             {".cpp", "Cpp"},
             {".h", "C"},
             {".out", "Executables"},
-            {"", "Executables"},
+            // {"", "Executables"},
             {".hpp", "CppHeader"},
             {".py", "Python"},
             {".java", "Java"},
@@ -118,7 +118,8 @@ public:
         // Loop to map .type with Subdirectory name
         for (const auto &[extension, directory] : fileTypeToDirectory)
         {
-            if (file_type == extension)
+            if (file.extension().string() == extension)
+                std::cout<<"File types"<<file.extension().string();
                 return directory;
         }
         return "Undefine";
@@ -131,13 +132,15 @@ public:
         std::string file_path = file;
         try
         {
-            if (!fs::exists(pathToCreate(file)))
-                if (fs::create_directories(file_path.append("/").append(pathToCreate(file_type))))
-                    std::cout << "Create subdir success";
+            std::string pathCreation = file_path.append("/").append(pathToCreate(file_type));
+            if (!fs::exists(pathToCreate(pathCreation)))
+
+                if (fs::create_directories(pathCreation))
+                    std::cout << "Create subdir success :"<<pathCreation<<"\n";
                 else
-                    std::cout << "Failed to create subdirectory";
+                    std::cout << "Fail to create :"<<pathCreation<<"\n";
             else
-                std::cout << "Subdirectory already exists";
+                std::cout << "Subdirectory already exists :"<<pathCreation<<"\n";
         }
         catch (const fs::filesystem_error err)
         {
@@ -201,6 +204,5 @@ int main()
         std::cout << "Path found." << std::endl;
         p.listPath(dirpath);
     }
-
     return 0;
 }
