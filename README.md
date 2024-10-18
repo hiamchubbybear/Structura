@@ -9,6 +9,11 @@
 
 ---
 
+## TechStack
+- C++ 17 vers
+- CMake (future requirements)
+
+---
 ## Installation
 
 ### _Windows_
