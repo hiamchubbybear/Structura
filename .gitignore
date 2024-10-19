@@ -1,1 +1,3 @@
-/Users/chessy/CodeSpace/Cplusplus/FileFilter/.vscode/settings.json
+.vscode
+*out
+c

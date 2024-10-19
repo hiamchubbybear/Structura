@@ -2,9 +2,10 @@
 #include <filesystem>
 #include <map>
 // @author : Chessy
-// @date : 18/10/2024
+// @date : 17/10/2024
 // @def  filesystem
 namespace fs = std::filesystem;
+// @def movefile
 static std::filesystem::perms read_perm = std::filesystem::perms::owner_read;
 static std::filesystem::perms all_perm = std::filesystem::perms::all;
 static std::filesystem::perms write_perm = std::filesystem::perms::owner_write;
@@ -21,12 +22,10 @@ public:
     {
         return !fs::exists(dirpath) && fs::is_directory(dirpath) && !fs::is_empty(dirpath);
     }
-
+    // @note Can not map extension  with Directory Name
 public:
-    std::string pathToCreate(const fs::path &file)
+    std::string mapName(const fs::path &file)
     {
-        std::cout << "Processing file: " << file.string() << "\n";
-        std::cout << "File extension: " << file.extension().string() << "\n";
         if (!file.has_extension())
             return "Undefine";
         std::map<std::string, std::string> fileTypeToDirectory = {
@@ -133,16 +132,31 @@ public:
     }
 
 public:
-    void createSubdir(const fs::path &file)
+    bool moveFileToExistedDir(fs::path parentPath, fs::path file)
+    {
+        try
+        {
+            fs::rename(parentPath, file);
+            std::cout<<"Move success fully from " << parentPath <<" ->>" << file<<"\n";
+        }
+        catch (const fs::filesystem_error &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        return false;
+    }
+
+public:
+    void createSubdir(const fs::path &file, const fs::path thisPath)
     {
         std::string file_type = file.extension().string();
-        std::string directory = pathToCreate(file);    // Get the directory based on file extension
+        std::string directory = mapName(thisPath); // Get the directory based on file extension
         // fs::path file_path = file.parent_path();       // Get the directory part of the file
         fs::path pathCreation = file / directory; // Properly append the new subdirectory
         try
         {
-            // std::string pathCreation = file_path.append("/").append(pathToCreate(file_type));
-            if (!fs::exists(pathToCreate(pathCreation)))
+            // std::string pathCreation = file_path.append("/").append(mapName(file_type));
+            if (!fs::exists(mapName(file)))
 
                 if (fs::create_directories(pathCreation))
                     std::cout << "Create subdir success :" << pathCreation << "\n";
@@ -167,9 +181,7 @@ public:
             for (const auto &entry :
                  fs::directory_iterator(dirpath))
             {
-                std::cout << "File :" << entry.path() << "\n";
-                // Test create subdir
-                createSubdir(rootPath);
+                std::cout << "File :" << entry.path().extension().string() << "\n";
                 if (fs::is_directory(entry.status()))
                 {
                     // Declared permission -> permiss
@@ -187,6 +199,10 @@ public:
                         continue;
                     }
                 }
+                // Test create subdir
+                // @fix infinite loop recursion
+                createSubdir(dirpath, entry);
+                moveFileToExistedDir(dirpath ,entry);
             }
         }
         catch (const fs::filesystem_error &e)
@@ -223,6 +239,5 @@ int main()
             continue;
         }
     } while (true);
-
     return 0;
 }
