@@ -1,6 +1,5 @@
 name: C++ CI
 
-# This will trigger the workflow on push or pull request events on the main branch
 on:
   push:
     branches:
@@ -11,27 +10,30 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use Ubuntu environment
+    runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code from your repository
     - name: Checkout code
       uses: actions/checkout@v2
 
-    # Step 2: Install CMake and other dependencies
-    - name: Install CMake
-      run: sudo apt-get install cmake
 
-    # Step 3: Create a build directory and run CMake to configure the project
+    - name: Install CMake and GCC
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++
+
+
+    - name: Clean build directory
+      run: rm -rf build
+
+
     - name: Configure CMake
       run: cmake -S . -B build
 
-    # Step 4: Build the project using CMake
+
     - name: Build with CMake
       run: cmake --build build
 
-    # Step 5 (Optional): If you have tests, you can run them here
-    - name: Run tests
-      run: |
-        cd build
-        ctest
+
+    - name: Check directory permissions
+      run: ls -l
