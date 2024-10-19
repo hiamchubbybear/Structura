@@ -60,7 +60,7 @@ EQUALS = =
 CMAKE_SOURCE_DIR = /Users/chessy/CodeSpace/Cplusplus/Structura
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/chessy/CodeSpace/Cplusplus/Structura/src
+CMAKE_BINARY_DIR = /Users/chessy/CodeSpace/Cplusplus/Structura
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/chessy/CodeSpace/Cplusplus/Structura/src/CMakeFiles /Users/chessy/CodeSpace/Cplusplus/Structura/src//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/chessy/CodeSpace/Cplusplus/Structura/CMakeFiles /Users/chessy/CodeSpace/Cplusplus/Structura//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/chessy/CodeSpace/Cplusplus/Structura/src/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/chessy/CodeSpace/Cplusplus/Structura/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

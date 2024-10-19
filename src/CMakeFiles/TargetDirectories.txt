@@ -1,3 +1,0 @@
-/Users/chessy/CodeSpace/Cplusplus/Structura/src/CMakeFiles/Structura.dir
-/Users/chessy/CodeSpace/Cplusplus/Structura/src/CMakeFiles/edit_cache.dir
-/Users/chessy/CodeSpace/Cplusplus/Structura/src/CMakeFiles/rebuild_cache.dir

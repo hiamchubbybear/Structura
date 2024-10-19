@@ -1,5 +1,5 @@
 CMakeFiles/Structura.dir/main.cpp.o: \
-  /Users/chessy/CodeSpace/Cplusplus/Structura/src/main.cpp \
+  /Users/chessy/CodeSpace/Cplusplus/Structura/main.cpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/c++/v1/__assert \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/usr/include/c++/v1/__assertion_handler \
