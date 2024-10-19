@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add the executable by specifying the source file
-add_executable(Structura main.cpp)
+add_executable(main.cpp)
 
 # Optionally, you can link libraries if needed
 # target_link_libraries(Structura <library_name>)
