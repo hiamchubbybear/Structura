@@ -97,7 +97,7 @@ Feel free to connect with me on social media!
 
 [<img align="left" alt="nixrajput | Instagram" width="24px" src="https://raw.githubusercontent.com/nixrajput/nixlab-files/master/images/icons/instagram-brands.svg" />][instagram]
 
-[github]: https://github.com/hiamchubbybear.git
+[github]: https://github.com/hiamchubbybear
 [facebook]: https://facebook.com/hiamchubbybear
 [instagram]: https://www.instagram.com/chessy.1603/
 [linkedin]: https://www.linkedin.com/in/huy-tran-423a402a4/
