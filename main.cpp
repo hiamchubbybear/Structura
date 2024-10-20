@@ -134,10 +134,20 @@ public:
 public:
     bool moveFileToExistedDir(fs::path parentPath, fs::path file)
     {
+        fs::path toFile = fs::path(parentPath / file.filename());
+        fs::path toDir = fs::path(parentPath / mapName(file) / file.filename());
+        std::cout << toFile;
         try
         {
-            fs::rename(parentPath, file);
-            std::cout<<"Move success fully from " << parentPath <<" ->>" << file<<"\n";
+            if (!fs::is_directory(parentPath))
+            {
+                std::cerr << "Error: Destination is not a directory. or file move is not a file" << std::endl;
+            }
+            else
+            {
+                fs::rename(toFile, toDir);
+                std::cout << "Move success fully from " << parentPath << " ->>" << file << "\n";
+            }
         }
         catch (const fs::filesystem_error &e)
         {
@@ -173,15 +183,41 @@ public:
     // List all directory and subdirectory
     // If do not have permission -> skip
 public:
+    std::vector<fs::path> listAllPaths(const fs::path &dirpath)
+    {
+        std::vector<fs::path> paths;
+        try
+        {
+            for (const auto &entry : fs::directory_iterator(dirpath))
+            {
+                paths.push_back(entry.path());
+                if (fs::is_directory(entry))
+                {
+                    std::vector<fs::path> subPaths = listAllPaths(entry.path());
+                    paths.insert(paths.end(), subPaths.begin(), subPaths.end());
+                }
+            }
+        }
+        catch (const fs::filesystem_error &e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        return paths;
+    }
+
+public:
     void listPath(const fs::path &dirpath)
     {
         std::string rootPath = dirpath;
+        // Fix infinite recursion
+        std::vector<fs::path> paths = listAllPaths(dirpath);
+
         try
         {
             for (const auto &entry :
                  fs::directory_iterator(dirpath))
             {
-                std::cout << "File :" << entry.path().extension().string() << "\n";
+                std::cout << "File :" << entry << "\n";
                 if (fs::is_directory(entry.status()))
                 {
                     // Declared permission -> permiss
@@ -190,7 +226,7 @@ public:
                     if ((permiss & read_perm) != fs::perms::none)
                     {
                         std::cout << "---------------------------\nSubdirectory :" << entry.path().extension().string() << "\n";
-                        listPath(entry.path());
+                        // listPath(entry.path());
                     }
                     else
                     {
@@ -199,10 +235,17 @@ public:
                         continue;
                     }
                 }
+                createSubdir(dirpath,entry);
                 // Test create subdir
                 // @fix infinite loop recursion
-                createSubdir(dirpath, entry);
-                moveFileToExistedDir(dirpath ,entry);
+                for (const auto &path : paths)
+                {
+                    // Fix infinite recursion
+                    if (fs::is_regular_file(path))
+                    {
+                        moveFileToExistedDir(dirpath, path);
+                    }
+                }
             }
         }
         catch (const fs::filesystem_error &e)
@@ -216,13 +259,13 @@ int main()
     // Declare
     Structura p;
     std::string orpath = "/";
+    std::cout << "Path: ";
+    char cf;
     // Input path
     do
     {
-        std::cout << "Path: ";
-        std::cin >> orpath;
+        std::getline(std::cin, orpath);
         fs::path dirpath = orpath;
-        char cf;
         std::cout << "Are you sure to restruct" << orpath << " ? " << "(Y or N)";
         std::cin >> cf;
         if (cf == 'Y')
