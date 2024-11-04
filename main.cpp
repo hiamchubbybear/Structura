@@ -554,7 +554,7 @@ public:
                 else
                     std::cout << "Fail to create :" << pathCreation << "\n";
             else
-                std::cout << "Subdirectory already exists :" << pathCreation << "\n";
+                std::cout << "Move file to existed subdirectory :" << pathCreation << "\n";
         }
         catch (const fs::filesystem_error err)
         {
@@ -574,8 +574,9 @@ public:
                 paths.push_back(entry.path());
                 if (fs::is_directory(entry))
                 {
-                    std::vector<fs::path> subPaths = listAllPaths(entry.path());
-                    paths.insert(paths.end(), subPaths.begin(), subPaths.end());
+                    std::cout<<"Is directory ->> Skip ";
+                    // std::vector<fs::path> subPaths = listAllPaths(entry.path());
+                    // paths.insert(paths.end(), subPaths.begin(), subPaths.end());
                 }
             }
         }
